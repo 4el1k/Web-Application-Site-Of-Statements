@@ -9,4 +9,5 @@ public class SignUpForm {
     private String name;
     private String mail;
     private String phoneNumber;
+    private String password;
 }
