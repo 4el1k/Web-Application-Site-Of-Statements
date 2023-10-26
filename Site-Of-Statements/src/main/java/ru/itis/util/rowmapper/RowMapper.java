@@ -1,4 +1,4 @@
-package ru.itis.models.util.rowmapper;
+package ru.itis.util.rowmapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

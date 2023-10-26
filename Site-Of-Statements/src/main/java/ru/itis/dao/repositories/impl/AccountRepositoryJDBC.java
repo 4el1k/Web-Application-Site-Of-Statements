@@ -1,4 +1,4 @@
-package ru.itis.models.dao.repositories.impl;
+package ru.itis.dao.repositories.impl;
 
 import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.models.Account;

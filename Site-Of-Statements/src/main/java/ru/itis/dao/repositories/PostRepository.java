@@ -1,6 +1,5 @@
-package ru.itis.models.dao.repositories;
+package ru.itis.dao.repositories;
 
-import ru.itis.models.Account;
 import ru.itis.models.Post;
 import ru.itis.util.rowmapper.RowMapper;
 
