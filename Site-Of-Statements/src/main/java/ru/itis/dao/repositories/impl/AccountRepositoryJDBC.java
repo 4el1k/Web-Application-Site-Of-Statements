@@ -27,10 +27,10 @@ public class AccountRepositoryJDBC implements AccountRepository {
     public AccountRepositoryJDBC(Connection connection) {
         this.connection = connection;
         // language=sql
-        SAVE_SQL = "INSERT INTO accounts (name, city, telegram, mail, phone_number, role)"
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        SAVE_SQL = "INSERT INTO accounts (name, city, telegram, mail, phone_number, role, password)"
+                + "VALUES (?, ?, ?, ?, ?, ?,? )";
         // language=sql
-        FIND_BY_ID_SQL = "SELECT * FROM accaounts WHERE id = ?";
+        FIND_BY_ID_SQL = "SELECT * FROM accounts WHERE id = ?";
         // language=sql
         DELETE_SQL = null;
         // language=sql
@@ -42,13 +42,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public void save(Account account) throws SQLException {
-        if (savePS == null) {
-            try {
-                savePS = connection.prepareStatement(SAVE_SQL);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        checkPS(savePS, SAVE_SQL);
         try {
            savePS.setString(1, account.getName());
            savePS.setString(2, account.getCity());
@@ -56,6 +50,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
            savePS.setString(4, account.getMail());
            savePS.setString(5, account.getPhoneNumber());
            savePS.setString(6, account.getRole().name());
+           savePS.setString(7, account.getPassword());
 
            savePS.executeUpdate();
         } catch (SQLException e) {
@@ -72,13 +67,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public Optional<Account> findById(UUID id, RowMapper<Account> rowMapper) throws SQLException {
-        if (findByIdPS == null) {
-            try {
-                findByIdPS = connection.prepareStatement(FIND_BY_ID_SQL);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        checkPS(findByIdPS, FIND_BY_ID_SQL);
         Account resultAccount = null;
         try {
             findByIdPS.setObject(1, id);
@@ -100,13 +89,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public Optional<Account> findByMail(String mail, RowMapper<Account> rowMapper) throws SQLException {
-        if (findByMailPS == null) {
-            try {
-                findByMailPS = connection.prepareStatement(FIND_BY_MAIL_SQL);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        checkPS(findByMailPS, FIND_BY_MAIL_SQL);
         Account resultAccount = null;
         try {
             findByMailPS.setObject(1, mail);
@@ -128,13 +111,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public boolean update(Account account) throws SQLException {
-        if (updatePS==null){
-            try {
-                updatePS = connection.prepareStatement(UPDATE_SQL);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        checkPS(updatePS, UPDATE_SQL);
         try{
             updatePS.setString(1, account.getName());
             updatePS.setString(2, account.getCity());
@@ -149,5 +126,15 @@ public class AccountRepositoryJDBC implements AccountRepository {
         }
 
         return true;
+    }
+    
+    private void checkPS(PreparedStatement ps, String sql){
+        if (ps==null){
+            try {
+                ps = connection.prepareStatement(sql);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

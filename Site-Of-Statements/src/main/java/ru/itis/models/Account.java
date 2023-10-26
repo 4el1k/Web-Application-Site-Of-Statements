@@ -20,6 +20,7 @@ public class Account {
     private String telegram;
     private String mail;
     private String phoneNumber;
+    private String password;
     private AccountRole role;
     private List<Post> posts;
     private List<Post> favoritePosts;
