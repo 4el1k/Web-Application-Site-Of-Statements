@@ -4,6 +4,8 @@ import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.dto.SignUpForm;
 import ru.itis.models.Account;
 import ru.itis.services.SingUpService;
+import ru.itis.util.rowmapper.impl.AccountRowMapper;
+import ru.itis.util.security.HashFunctions;
 
 import java.sql.SQLException;
 
@@ -15,15 +17,15 @@ public class SignUpDataBaseSaveService implements SingUpService {
 
     @Override
     public boolean singUp(SignUpForm form) {
-
-        // ToDo RowMapper implementation
-        if (accountRepository.findByMail(form.getMail(), accountRowMapper)!=null){
-            return false;
+        try {
+            if (accountRepository.findByMail(form.getMail(), new AccountRowMapper()).isPresent()){
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        // ToDo
-        // replace by hash method
-        String passwordHash = form.getPassword();
+        String passwordHash = HashFunctions.getPasswordHashMD5(form.getPassword());
         Account account = Account.builder()
                 .name(form.getName())
                 .password(passwordHash)
@@ -35,7 +37,6 @@ public class SignUpDataBaseSaveService implements SingUpService {
             accountRepository.save(account);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-            return false;
         }
 
         return true;
