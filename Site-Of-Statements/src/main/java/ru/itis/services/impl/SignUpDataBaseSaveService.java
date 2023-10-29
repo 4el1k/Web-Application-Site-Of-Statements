@@ -3,6 +3,7 @@ package ru.itis.services.impl;
 import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.dto.SignUpForm;
 import ru.itis.models.Account;
+import ru.itis.models.states.AccountRole;
 import ru.itis.services.SingUpService;
 import ru.itis.util.rowmapper.impl.AccountRowMapper;
 import ru.itis.util.security.HashFunctions;
@@ -31,6 +32,8 @@ public class SignUpDataBaseSaveService implements SingUpService {
                 .password(passwordHash)
                 .mail(form.getMail())
                 .phoneNumber(form.getPhoneNumber())
+                .role(AccountRole.DEFAULT)
+                .city("Moscow")
                 .build();
 
         try {
