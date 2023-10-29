@@ -1,0 +1,42 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    object-fit: cover;
+}
+
+.sign-up-service-heading {
+    display: flex;
+    justify-content: center;
+
+}
+
+.sign-up-service-main {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.fill-field {
+    padding: 5%;
+    width: 200px;
+    margin: 5px;
+    box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.button {
+    width: 200px;
+    padding: 5px;
+    border-radius: 15px;
+    border: 2px solid #ae2be5;
+    margin: 10px;
+    display: flex;
+    justify-content: center
+}
