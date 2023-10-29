@@ -37,12 +37,18 @@ public class AccountRepositoryJDBC implements AccountRepository {
         UPDATE_SQL = "UPDATE accounts SET name = ?, city = ?, telegram = ?, mail = ?, phone_number = ?, role = ?" +
                 "WHERE id = ?";
         // language = sql
-        FIND_BY_MAIL_SQL = null;
+        FIND_BY_MAIL_SQL = "SELECT * FROM accounts WHERE mail = ?";
     }
 
     @Override
     public void save(Account account) throws SQLException {
-        checkPS(savePS, SAVE_SQL);
+        if (savePS==null){
+            try {
+                savePS = connection.prepareStatement(SAVE_SQL);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         try {
            savePS.setString(1, account.getName());
            savePS.setString(2, account.getCity());
@@ -67,7 +73,13 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public Optional<Account> findById(UUID id, RowMapper<Account> rowMapper) throws SQLException {
-        checkPS(findByIdPS, FIND_BY_ID_SQL);
+        if (findByIdPS==null){
+            try {
+                findByIdPS = connection.prepareStatement(FIND_BY_ID_SQL);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         Account resultAccount = null;
         try {
             findByIdPS.setObject(1, id);
@@ -89,7 +101,13 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public Optional<Account> findByMail(String mail, RowMapper<Account> rowMapper) throws SQLException {
-        checkPS(findByMailPS, FIND_BY_MAIL_SQL);
+        if (findByMailPS==null){
+            try {
+                findByMailPS = connection.prepareStatement(FIND_BY_MAIL_SQL);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         Account resultAccount = null;
         try {
             findByMailPS.setObject(1, mail);
@@ -111,7 +129,13 @@ public class AccountRepositoryJDBC implements AccountRepository {
 
     @Override
     public boolean update(Account account) throws SQLException {
-        checkPS(updatePS, UPDATE_SQL);
+        if (updatePS==null){
+            try {
+                updatePS = connection.prepareStatement(UPDATE_SQL);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         try{
             updatePS.setString(1, account.getName());
             updatePS.setString(2, account.getCity());
@@ -126,15 +150,5 @@ public class AccountRepositoryJDBC implements AccountRepository {
         }
 
         return true;
-    }
-    
-    private void checkPS(PreparedStatement ps, String sql){
-        if (ps==null){
-            try {
-                ps = connection.prepareStatement(sql);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 }
