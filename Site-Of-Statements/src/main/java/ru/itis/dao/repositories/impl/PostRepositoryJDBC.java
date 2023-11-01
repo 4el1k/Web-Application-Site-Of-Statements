@@ -5,6 +5,7 @@ import ru.itis.models.Post;
 import ru.itis.util.rowmapper.RowMapper;
 
 import java.sql.*;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,8 +23,8 @@ public class PostRepositoryJDBC implements PostRepository {
     public PostRepositoryJDBC(Connection connection) {
         this.connection = connection;
         // language=sql
-        SAVE_SQL = "INSERT INTO posts (account_id, title, description, status, publishing_time, price, paths_to_photos)"
-                + "VALUES (?,?,?,?,?,?,?)";
+        SAVE_SQL = "INSERT INTO posts (account_id, title, description, status, price, paths_to_photos)"
+                + "VALUES (?,?,?,?,?,?)";
         // language=sql
         FIND_BY_ID_SQL = "SELECT * FROM posts WHERE id = ?";
         // language=sql
@@ -46,9 +47,9 @@ public class PostRepositoryJDBC implements PostRepository {
             savePS.setString(2, post.getTitle());
             savePS.setString(3, post.getDescription());
             savePS.setString(4, post.getStatus().name());
-            savePS.setDate(5, (Date) post.getPublishingTime());
-            savePS.setInt(6, post.getPrice());
-            savePS.setArray(7, (Array) post.getPathsOfPhotos());
+            savePS.setInt(5, post.getPrice());
+            savePS.setArray(6, connection.createArrayOf("text",
+                    post.getPathsOfPhotos().toArray(new String[0])));
 
             savePS.executeUpdate();
         } catch (SQLException e) {

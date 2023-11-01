@@ -4,9 +4,13 @@ import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.dao.repositories.PostRepository;
 import ru.itis.dao.repositories.impl.AccountRepositoryJDBC;
 import ru.itis.dao.repositories.impl.PostRepositoryJDBC;
+import ru.itis.services.FilesService;
 import ru.itis.services.FindAccountService;
+import ru.itis.services.SavePostService;
 import ru.itis.services.SingUpService;
 import ru.itis.services.impl.FindAccountInDataBaseService;
+import ru.itis.services.impl.LocalFilesService;
+import ru.itis.services.impl.SavePostInDataBaseService;
 import ru.itis.services.impl.SignUpDataBaseSaveService;
 
 import javax.servlet.ServletContext;
@@ -39,11 +43,17 @@ public class ServletContextListenerImpl implements ServletContextListener {
             PostRepository postRepository = new PostRepositoryJDBC(connection);
             SingUpService singUpService = new SignUpDataBaseSaveService(accountRepository);
             FindAccountService findAccountService = new FindAccountInDataBaseService(accountRepository);
-
+            FilesService filesService = new LocalFilesService("/home/bebra/repositories-ITIS/" +
+                    "Web-Application-Site-Of-Statements/Site-Of-Statements/src/main/photos/");
+            SavePostService savePostService = new SavePostInDataBaseService(
+                    postRepository, accountRepository, filesService
+            );
             servletContext.setAttribute("accountRepository", accountRepository);
             servletContext.setAttribute("postRepository", postRepository);
             servletContext.setAttribute("signUpService", singUpService);
             servletContext.setAttribute("findAccountService", findAccountService);
+            servletContext.setAttribute("filesService", filesService);
+            servletContext.setAttribute("savePostService", savePostService);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

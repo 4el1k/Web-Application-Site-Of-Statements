@@ -33,14 +33,13 @@ public class AuthorisationServlet extends HttpServlet {
             }
         }
         if (account.isPresent()) {
-            req.setAttribute("account", account);
             HttpSession httpSession = req.getSession(true);
             httpSession.setAttribute("isAuth", true);
-            httpSession.setAttribute("account", account);
+            httpSession.setAttribute("account", account.get());
 
-            resp.sendRedirect("/profile"); // ToDo: will send by previous URL;
+            resp.sendRedirect("localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
         } else {
-            req.getRequestDispatcher("/WEB-INF/authorisation.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/view/authorisation.jsp").forward(req, resp);
         }
     }
 
@@ -64,15 +63,14 @@ public class AuthorisationServlet extends HttpServlet {
         Account account = accountOpt.get();
         String passwordHash = HashFunctions.getPasswordHashMD5(inputPassword);
         if (passwordHash.equals(account.getPassword())) {
-            req.setAttribute("account", account);
             Cookie cookie = new Cookie("id", account.getId().toString());
             cookie.setMaxAge(60 * 60 * 24 * 30 * 12 * 10); // 10 years
             resp.addCookie(cookie);
             HttpSession httpSession = req.getSession(true);
             httpSession.setAttribute("isAuth", true);
             httpSession.setAttribute("account", account);
-
-            resp.sendRedirect("/profile"); // ToDo: will send by previous URL;
+            System.out.println(123123);
+            resp.sendRedirect("localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
         } else {
             doGet(req, resp);
         }
