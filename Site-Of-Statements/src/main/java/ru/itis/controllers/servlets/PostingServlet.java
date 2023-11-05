@@ -57,7 +57,7 @@ public class PostingServlet extends HttpServlet {
         Account account = (Account) session.getAttribute("account");
         Part part = req.getPart("file");
 
-        String fileName = account.getId().toString() + "#" + UUID.randomUUID() + ".jpeg"; // part of business logic :(
+        String fileName = account.getId().toString() + "_" + UUID.randomUUID() + ".webp" ; // part of business logic :(
         SavePostForm savePostForm = SavePostForm.builder()
                 .pathsOfPhotos(Collections.singletonList(fileName))
                 .title(title)

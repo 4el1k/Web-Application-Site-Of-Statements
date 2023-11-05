@@ -29,29 +29,9 @@ public class FeedServlet extends HttpServlet {
     }
 
     @Override
-    protected void doHead(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Post> postList = getPostsService.getPosts(10);
         req.setAttribute("posts", postList);
         req.getRequestDispatcher("/WEB-INF/view/feed.jsp").forward(req, resp);
     }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        UUID postId = UUID.fromString(req.getParameter("postId"));
-        Optional<Post> postOptional = findPostService.findPost(postId);
-        if (postOptional.isEmpty()) {
-            resp.sendRedirect("/lol");
-        } else {
-            req.setAttribute("post", postOptional.get());
-            req.getRequestDispatcher("/WEB-INF/post.jsp").forward(req, resp);
-        }
-    }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPut(req, resp);
-        // ToDo: loading info about account
-    }
-
-
 }

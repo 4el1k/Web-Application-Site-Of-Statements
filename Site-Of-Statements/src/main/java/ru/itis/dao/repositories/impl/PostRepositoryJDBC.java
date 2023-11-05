@@ -5,18 +5,18 @@ import ru.itis.models.Post;
 import ru.itis.util.rowmapper.RowMapper;
 
 import java.sql.*;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class PostRepositoryJDBC implements PostRepository {
     private final Connection connection;
     private final String SAVE_SQL;
     private final String FIND_BY_ID_SQL;
+    private final String GET_SOME_SQL;
     private final String DELETE_SQL;
     private final String UPDATE_SQL;
     private PreparedStatement savePS;
     private PreparedStatement findByIdPS;
+    private PreparedStatement getSomePS;
     private PreparedStatement deletePS;
     private PreparedStatement updatePS;
 
@@ -27,6 +27,8 @@ public class PostRepositoryJDBC implements PostRepository {
                 + "VALUES (?,?,?,?,?,?)";
         // language=sql
         FIND_BY_ID_SQL = "SELECT * FROM posts WHERE id = ?";
+        //language=sql
+        GET_SOME_SQL = "SELECT * FROM posts ORDER BY publishing_time DESC LIMIT 10";
         // language=sql
         DELETE_SQL = null;
         // language=sql
@@ -85,7 +87,32 @@ public class PostRepositoryJDBC implements PostRepository {
         return Optional.of(resultPost);
     }
 
-    // TODO 
+    @Override
+    public List<Post> getSome(int amount, RowMapper<Post> rowMapper) throws SQLException{
+        if (getSomePS==null){
+            try {
+                getSomePS = connection.prepareStatement(GET_SOME_SQL);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        List<Post> result = new ArrayList<>();
+        try {
+            //getSomePS.setInt(1, amount);
+            ResultSet resultSet = getSomePS.executeQuery();
+            int i = 0;
+            while (resultSet.next()){
+                result.add(rowMapper.from(resultSet, i));
+                i++;
+            }
+
+            return result;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // TODO
     @Override
     public boolean delete(UUID id) throws SQLException {
         return false;

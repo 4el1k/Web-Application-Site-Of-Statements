@@ -1,4 +1,6 @@
-<%--
+<%@ page import="ru.itis.models.Post" %>
+<%@ page import="java.util.List" %>
+<%@ page import="ru.itis.services.FilesService" %><%--
   Created by IntelliJ IDEA.
   User: bebra
   Date: 02.11.2023
@@ -6,11 +8,34 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
 <head>
     <title>Title</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style><%@include file="/style/stylesFeed.css" %> </style>
 </head>
 <body>
-
+<% List<Post> posts = (List<Post>) request.getAttribute("posts"); %>
+<div>
+    <div class="feed">
+        <% for (Post post : posts) { %>
+            <div class="frame">
+                <div>
+                    <p class="title">Title: <%=post.getTitle()%></p>
+                    <p class="price">Price: <%=post.getPrice()%></p>
+                    <p class="description">Description: <%=post.getDescription()%></p>
+                </div>
+                <div>
+                    <%String string = "photos/" + post.getPathsOfPhotos().get(0);%>
+                    <img class="frame-image" src="<%=string%>"/>
+                </div>
+            </div>
+            <%}%>
+    </div>
+</div>
 </body>
 </html>
