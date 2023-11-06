@@ -1,6 +1,6 @@
 <%@ page import="ru.itis.models.Post" %>
 <%@ page import="java.util.List" %>
-<%@ page import="ru.itis.services.FilesService" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: bebra
   Date: 02.11.2023
@@ -21,20 +21,26 @@
 <body>
 <% List<Post> posts = (List<Post>) request.getAttribute("posts"); %>
 <div>
-    <div class="feed">
-        <% for (Post post : posts) { %>
-            <div class="frame">
-                <div>
-                    <p class="title">Title: <%=post.getTitle()%></p>
-                    <p class="price">Price: <%=post.getPrice()%></p>
-                    <p class="description">Description: <%=post.getDescription()%></p>
+    <div class="scroll">
+        <div class = "feed">
+            <% for (Post post : posts) { %>
+                <div class="frame">
+                    <div>
+                        <p class="title">Title: <%=post.getTitle()%></p>
+                        <p class="price">Price: <%=post.getPrice()%> Rubles</p>
+                        <p class="description">Description: <%=post.getDescription()%></p>
+                        <form method="post" action="http://localhost:8081/Site_Of_Statements_war/feed">
+                            <input class="feed-button" type="button" value="More info">
+                            <input name="postId" value="<%=post.getId()%>" type="hidden">
+                        </form>
+                    </div>
+                    <div>
+                        <%String string = "photos/" + post.getPathsOfPhotos().get(0);%>
+                        <img class="frame-image" src="<%=string%>"/>
+                    </div>
                 </div>
-                <div>
-                    <%String string = "photos/" + post.getPathsOfPhotos().get(0);%>
-                    <img class="frame-image" src="<%=string%>"/>
-                </div>
-            </div>
-            <%}%>
+                <%}%>
+        </div>
     </div>
 </div>
 </body>
