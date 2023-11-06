@@ -4,14 +4,8 @@ import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.dao.repositories.PostRepository;
 import ru.itis.dao.repositories.impl.AccountRepositoryJDBC;
 import ru.itis.dao.repositories.impl.PostRepositoryJDBC;
-import ru.itis.services.FilesService;
-import ru.itis.services.FindAccountService;
-import ru.itis.services.SavePostService;
-import ru.itis.services.SingUpService;
-import ru.itis.services.impl.FindAccountInDataBaseService;
-import ru.itis.services.impl.LocalFilesService;
-import ru.itis.services.impl.SavePostInDataBaseService;
-import ru.itis.services.impl.SignUpDataBaseSaveService;
+import ru.itis.services.*;
+import ru.itis.services.impl.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -44,16 +38,25 @@ public class ServletContextListenerImpl implements ServletContextListener {
             SingUpService singUpService = new SignUpDataBaseSaveService(accountRepository);
             FindAccountService findAccountService = new FindAccountInDataBaseService(accountRepository);
             FilesService filesService = new LocalFilesService("/home/bebra/repositories-ITIS/" +
-                    "Web-Application-Site-Of-Statements/Site-Of-Statements/src/main/photos/");
+                    "Web-Application-Site-Of-Statements/Site-Of-Statements/src/main/webapp/photos/");
             SavePostService savePostService = new SavePostInDataBaseService(
                     postRepository, accountRepository, filesService
             );
+            FindPostService findPostService = new FindPostInDataBaseService(postRepository);
+            FindPostWithPullAccount findPostWithPullAccount = new FindPostWithPullAccountFromDataBaseService(
+                    findPostService, findAccountService
+            );
+            GetPostsService getPostsService = new GetPostsFromDataBaseService(postRepository);
+
             servletContext.setAttribute("accountRepository", accountRepository);
             servletContext.setAttribute("postRepository", postRepository);
             servletContext.setAttribute("signUpService", singUpService);
             servletContext.setAttribute("findAccountService", findAccountService);
             servletContext.setAttribute("filesService", filesService);
             servletContext.setAttribute("savePostService", savePostService);
+            servletContext.setAttribute("findPostService", findPostService);
+            servletContext.setAttribute("findPostWithPullAccount", findPostWithPullAccount);
+            servletContext.setAttribute("getPostsService", getPostsService);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
