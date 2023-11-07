@@ -9,19 +9,23 @@
 <html>
 <head>
     <title>Files Upload</title>
+    <style><%@include file="/style/stylesPosting.css" %> </style>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
-<dev>
-    <form method="POST"  action="http://localhost:8081/Site_Of_Statements_war/posting" enctype="multipart/form-data">
-        <label for="description">Description</label>
-        <input id="description" name="description" placeholder="Enter description...">
-        <br>
-        <br>
-        <input type="file" name="file">
-        <input type="submit" value="File Upload">
-        <input type="text" name="title" placeholder="input title, baby">
-        <input type="number" name="price" placeholder="price">
-    </form>
-</dev>
+<div class="main">
+    <div class="form">
+        <form method="POST"  action="http://localhost:8081/Site_Of_Statements_war/posting" enctype="multipart/form-data">
+            <h1>Create post</h1>
+            <input class="fill-field" id="description" name="description" placeholder="Enter description...">
+            <input class="fill-field" type="text" name="title" placeholder="input title, baby">
+            <input class="fill-field" type="number" name="price" placeholder="price">
+            <input class="button" type="file" name="file" placeholder="gooo">
+            <input class="button" type="submit" value="Create">
+        </form>
+    </div>
+</div>
 </body>
 </html>
