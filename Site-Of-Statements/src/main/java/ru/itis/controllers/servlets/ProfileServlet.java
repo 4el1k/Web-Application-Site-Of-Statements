@@ -22,7 +22,7 @@ public class ProfileServlet extends HttpServlet {
         httpSession = req.getSession(true);
         account = (Account) httpSession.getAttribute("account");
         if (account==null){
-            resp.sendRedirect("/feed");
+            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/authorisation");
         } else {
             req.setAttribute("account", account);
             req.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(req,resp);
