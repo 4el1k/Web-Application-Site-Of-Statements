@@ -21,7 +21,25 @@
 <body>
 <% List<Post> posts = (List<Post>) request.getAttribute("posts"); %>
 <div>
+    <div class = "menu">
+        <form action="http://localhost:8081/Site_Of_Statements_war/profile">
+            <input class="menu-button" type="submit" value="Profile">
+        </form>
+        <form action="http://localhost:8081/Site_Of_Statements_war/userposts">
+            <input class="menu-button" type="submit" value="My posts">
+        </form>
+        <form action="http://localhost:8081/Site_Of_Statements_war/favoriteposts">
+            <input class="menu-button" type="submit" value="Favorite posts">
+        </form>
+        <form action="http://localhost:8081/Site_Of_Statements_war/authentication">
+            <input class="menu-button" type="submit" value="SignUp">
+        </form>
+        <form action="http://localhost:8081/Site_Of_Statements_war/authorisation">
+            <input class="menu-button" type="submit" value="SignIn">
+        </form>
+    </div>
     <div class="scroll">
+
         <div class = "feed">
             <% for (Post post : posts) { %>
                 <div class="frame">
@@ -29,8 +47,8 @@
                         <p class="title">Title: <%=post.getTitle()%></p>
                         <p class="price">Price: <%=post.getPrice()%> Rubles</p>
                         <p class="description">Description: <%=post.getDescription()%></p>
-                        <form method="post" action="http://localhost:8081/Site_Of_Statements_war/feed">
-                            <input class="feed-button" type="button" value="More info">
+                        <form method="get" action="http://localhost:8081/Site_Of_Statements_war/feed">
+                            <input class="feed-button" type="submit" value="More info">
                             <input name="postId" value="<%=post.getId()%>" type="hidden">
                         </form>
                     </div>
