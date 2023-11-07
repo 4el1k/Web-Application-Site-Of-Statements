@@ -37,7 +37,7 @@ public class AuthorisationServlet extends HttpServlet {
             httpSession.setAttribute("isAuth", true);
             httpSession.setAttribute("account", account.get());
 
-            resp.sendRedirect("localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
+            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
         } else {
             req.getRequestDispatcher("/WEB-INF/view/authorisation.jsp").forward(req, resp);
         }
@@ -69,8 +69,8 @@ public class AuthorisationServlet extends HttpServlet {
             HttpSession httpSession = req.getSession(true);
             httpSession.setAttribute("isAuth", true);
             httpSession.setAttribute("account", account);
-            System.out.println(123123);
-            resp.sendRedirect("localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
+            // ToDo: will send by previous URL;
+            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/profile");
         } else {
             doGet(req, resp);
         }

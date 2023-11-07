@@ -62,8 +62,8 @@ public class AuthenticationServlet extends HttpServlet {
             doGet(req, resp);
             return;
         }
-        String passwordHash = HashFunctions.getPasswordHashMD5(req.getParameter("password"));
-        SignUpForm signUpForm = new SignUpForm(name, mail, phoneNumber, passwordHash);
+
+        SignUpForm signUpForm = new SignUpForm(name, mail, phoneNumber, password);
 
         boolean authenticationSuccessful = signUpService.singUp(signUpForm);
 
@@ -76,7 +76,7 @@ public class AuthenticationServlet extends HttpServlet {
             httpSession.setAttribute("isAuth", true);
             httpSession.setAttribute("account", account);
 
-            resp.sendRedirect("/profile"); // ToDo: will send by previous URL;
+            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
         } else {
             doGet(req, resp);
         }
