@@ -26,11 +26,12 @@ public class SessionFilter implements Filter {
         boolean isAccessiblePage = request.getRequestURI().equals(context + "/authorisation")
                 || request.getRequestURI().equals(context + "/authentication")
                 || request.getRequestURI().equals(context + "/feed");
+        boolean isFeed = request.getRequestURI().equals(context + "/feed"); // changed
         boolean isAuthenticate = false;
 
         if (sessionExist) {
-            if (session.getAttribute("authenticated") != null) {
-                isAuthenticate = (boolean) session.getAttribute("authenticated");
+            if (session.getAttribute("isAuth") != null) { // changed
+                isAuthenticate = (boolean) session.getAttribute("isAuth"); // changed
             }
             if (!isAuthenticate && isAccessiblePage) {
                 filterChain.doFilter(request, response);
@@ -40,7 +41,7 @@ public class SessionFilter implements Filter {
                 response.sendRedirect(context + "/authorisation");
                 return;
             }
-            if (isAuthenticate && isAccessiblePage) {
+            if (isAuthenticate && isAccessiblePage && !isFeed) {
                 response.getWriter().println("You already logged in");
                 return;
             }
