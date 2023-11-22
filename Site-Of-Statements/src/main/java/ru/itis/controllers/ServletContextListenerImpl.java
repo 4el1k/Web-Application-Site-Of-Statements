@@ -49,6 +49,8 @@ public class ServletContextListenerImpl implements ServletContextListener {
             GetPostsService getPostsService = new GetPostsFromDataBaseService(postRepository);
             CreateFavoritePostsCookieService createFavoritePostsCookieService =
                     new CreateFavoritePostsCookieServiceImpl();
+            FindFavoritePostsService findFavoritePostsService = new FindFavoritePostsServiceImpl(
+                    findPostWithPullAccount);
 
             servletContext.setAttribute("accountRepository", accountRepository);
             servletContext.setAttribute("postRepository", postRepository);
@@ -60,6 +62,7 @@ public class ServletContextListenerImpl implements ServletContextListener {
             servletContext.setAttribute("findPostWithPullAccount", findPostWithPullAccount);
             servletContext.setAttribute("getPostsService", getPostsService);
             servletContext.setAttribute("createFavoritePostsCookieService", createFavoritePostsCookieService);
+            servletContext.setAttribute("findFavoritePostsService", findFavoritePostsService);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
