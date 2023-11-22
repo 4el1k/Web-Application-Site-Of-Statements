@@ -47,10 +47,18 @@
                         <p class="title">Title: <%=post.getTitle()%></p>
                         <p class="price">Price: <%=post.getPrice()%> Rubles</p>
                         <p class="description">Description: <%=post.getDescription()%></p>
-                        <form method="get" action="http://localhost:8081/Site_Of_Statements_war/feed">
-                            <input class="feed-button" type="submit" value="More info">
-                            <input name="postId" value="<%=post.getId()%>" type="hidden">
-                        </form>
+                        <div>
+                            <form method="get" action="http://localhost:8081/Site_Of_Statements_war/feed">
+                                <input class="feed-button" type="submit" value="More info">
+                                <input name="postId" value="<%=post.getId()%>" type="hidden">
+                            </form>
+                        </div>
+                        <div>
+                            <form method="post" action="http://localhost:8081/Site_Of_Statements_war/feed">
+                                <input class="feed-button" type="submit" value="i like it">
+                                <input name="postId" value="<%=post.getId()%>" type="hidden">
+                            </form>
+                        </div>
                     </div>
                     <div>
                         <%String string = "photos/" + post.getPathsOfPhotos().get(0);%>
