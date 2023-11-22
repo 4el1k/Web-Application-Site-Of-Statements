@@ -14,7 +14,6 @@ body {
     flex-direction: column;
 }
 
-
 .title {
     font-size: 24px;
     font-weight: bold;
@@ -46,7 +45,6 @@ body {
     object-fit: cover;
     border-radius: 15px;
 }
-
 
 .feed {
     display: flex;
@@ -93,7 +91,6 @@ body {
     margin-right: 170px;
 }
 
-
 .menu{
     display: flex;
     align-items: center;
@@ -126,5 +123,3 @@ body {
 .menu-button:hover:before {
     top: 77%;
 }
-
-
