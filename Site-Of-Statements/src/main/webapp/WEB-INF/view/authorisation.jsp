@@ -1,3 +1,4 @@
+<%@ page import="java.util.Date" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -26,7 +27,9 @@
     <div class="sign-up-service-main">
         <div>
             <div class="sign-up-service-heading">
-                <h1>LogIn</h1>
+                <% Date date = (Date) request.getAttribute("date"); %>
+                <h1 >Year: <%=date.toString()%></h1>
+                <p1>LogIn</p1>
             </div>
             <div>
                 <div>

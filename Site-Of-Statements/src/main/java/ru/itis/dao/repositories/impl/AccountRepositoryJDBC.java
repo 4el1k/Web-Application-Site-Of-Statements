@@ -2,14 +2,14 @@ package ru.itis.dao.repositories.impl;
 
 import ru.itis.dao.repositories.AccountRepository;
 import ru.itis.models.Account;
+import ru.itis.models.Post;
 import ru.itis.util.rowmapper.RowMapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class AccountRepositoryJDBC implements AccountRepository {
     private final Connection connection;
@@ -18,11 +18,13 @@ public class AccountRepositoryJDBC implements AccountRepository {
     private final String FIND_BY_MAIL_SQL;
     private final String DELETE_SQL;
     private final String UPDATE_SQL;
+    private final String FIND_BY_ID_WITH_PULL_POSTS_SQL;
     private PreparedStatement savePS;
     private PreparedStatement deletePS;
     private PreparedStatement findByIdPS;
     private PreparedStatement findByMailPS;
     private PreparedStatement updatePS;
+    private PreparedStatement findByIdWithPullPostsPS;
 
     public AccountRepositoryJDBC(Connection connection) {
         this.connection = connection;
@@ -38,6 +40,10 @@ public class AccountRepositoryJDBC implements AccountRepository {
                 "WHERE id = ?";
         // language = sql
         FIND_BY_MAIL_SQL = "SELECT * FROM accounts WHERE mail = ?";
+        // language = sql
+        FIND_BY_ID_WITH_PULL_POSTS_SQL = "SELECT * FROM accounts " +
+                "LEFT JOIN posts ON accounts.id = posts.account_id " +
+                "WHERE account_id = ?;";
     }
 
     @Override
@@ -81,12 +87,13 @@ public class AccountRepositoryJDBC implements AccountRepository {
             }
         }
         Account resultAccount = null;
+        List<Post> posts = new ArrayList<>();
         try {
             findByIdPS.setObject(1, id);
             ResultSet resultSet = findByIdPS.executeQuery();
             int i = 0;
             while (resultSet.next()) {
-                resultAccount = rowMapper.from(resultSet, i);
+                resultAccount = rowMapper.from(resultSet, i, posts);
                 i++;
             }
         } catch (SQLException e) {
@@ -114,7 +121,7 @@ public class AccountRepositoryJDBC implements AccountRepository {
             ResultSet resultSet = findByMailPS.executeQuery();
             int i = 0;
             while (resultSet.next()) {
-                resultAccount = rowMapper.from(resultSet, i);
+                resultAccount = rowMapper.from(resultSet, i, new ArrayList<>());
                 i++;
             }
         } catch (SQLException e) {
@@ -125,6 +132,27 @@ public class AccountRepositoryJDBC implements AccountRepository {
             return Optional.empty();
         }
         return Optional.of(resultAccount);
+    }
+
+    @Override
+    public Optional<Account> findByIdWithPullPosts(UUID id, RowMapper<Account> rowMapper)
+            throws SQLException {
+        if (findByIdWithPullPostsPS==null){
+            findByIdWithPullPostsPS = connection.prepareStatement(FIND_BY_ID_WITH_PULL_POSTS_SQL);
+        }
+        findByIdWithPullPostsPS.setObject(1, id);
+        List<Post> posts = new ArrayList<>();
+        Account resultAccount = Account.builder()
+                .posts(posts)
+                .build();
+        ResultSet resultSet = findByIdWithPullPostsPS.executeQuery();
+        int i = 0;
+        while (resultSet.next()) {
+            resultAccount = rowMapper.from(resultSet, i, posts);
+            i++;
+        }
+
+        return Optional.ofNullable(resultAccount);
     }
 
     @Override

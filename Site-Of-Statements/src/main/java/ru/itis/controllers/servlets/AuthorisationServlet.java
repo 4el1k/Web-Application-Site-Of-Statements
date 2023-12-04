@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,22 +26,10 @@ public class AuthorisationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Cookie[] cookies = req.getCookies();
-        Optional<Account> account = Optional.empty();
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("id")) {
-                account = findAccountService.find(UUID.fromString(cookie.getValue()));
-            }
-        }
-        if (account.isPresent()) {
-            HttpSession httpSession = req.getSession(true);
-            httpSession.setAttribute("isAuth", true);
-            httpSession.setAttribute("account", account.get());
-
-            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/profile"); // ToDo: will send by previous URL;
-        } else {
-            req.getRequestDispatcher("/WEB-INF/view/authorisation.jsp").forward(req, resp);
-        }
+        Date date = new Date();
+        req.setAttribute("date", date);
+        System.out.println(date);
+        req.getRequestDispatcher("/WEB-INF/view/authorisation.jsp").forward(req, resp);
     }
 
     @Override
@@ -63,12 +52,9 @@ public class AuthorisationServlet extends HttpServlet {
         Account account = accountOpt.get();
         String passwordHash = HashFunctions.getPasswordHashMD5(inputPassword);
         if (passwordHash.equals(account.getPassword())) {
-            Cookie cookie = new Cookie("id", account.getId().toString());
-            cookie.setMaxAge(60 * 60 * 24 * 30 * 12 * 10); // 10 years
-            resp.addCookie(cookie);
             HttpSession httpSession = req.getSession(true);
             httpSession.setAttribute("isAuth", true);
-            httpSession.setAttribute("account", account);
+            httpSession.setAttribute("accountId", account.getId());
             // ToDo: will send by previous URL;
             resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/profile");
         } else {

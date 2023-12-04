@@ -1,6 +1,7 @@
 package ru.itis.dao.repositories;
 
 import ru.itis.models.Account;
+import ru.itis.models.Post;
 import ru.itis.util.rowmapper.RowMapper;
 
 import java.sql.SQLException;
@@ -30,6 +31,9 @@ public interface AccountRepository {
      * @param mail : account mail.
      * */
     Optional<Account> findByMail(String mail, RowMapper<Account> rowMapper) throws SQLException;
+
+    Optional<Account> findByIdWithPullPosts(UUID id, RowMapper<Account> rowMapper)
+            throws SQLException;
 
     /**
      * @param account : account for deleting from DB.

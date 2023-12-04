@@ -75,7 +75,7 @@ public class PostRepositoryJDBC implements PostRepository {
             ResultSet resultSet = findByIdPS.executeQuery();
             int i = 0;
             while (resultSet.next()) {
-                resultPost = postRowMapper.from(resultSet, i);
+                resultPost = postRowMapper.from(resultSet, i, new ArrayList<>());
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -102,7 +102,7 @@ public class PostRepositoryJDBC implements PostRepository {
             ResultSet resultSet = getSomePS.executeQuery();
             int i = 0;
             while (resultSet.next()){
-                result.add(rowMapper.from(resultSet, i));
+                result.add(rowMapper.from(resultSet, i, new ArrayList<>()));
                 i++;
             }
 

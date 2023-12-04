@@ -9,13 +9,12 @@ import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class PostRowMapper implements RowMapper<Post> {
     @Override
-    public Post from(ResultSet rs, int rowNum) throws SQLException {
+    public Post from(ResultSet rs, int rowNum, List<Post> posts) throws SQLException {
         Array s = rs.getArray("paths_to_photos");
         Account account = Account.builder()
                 .id((UUID) rs.getObject("account_id"))

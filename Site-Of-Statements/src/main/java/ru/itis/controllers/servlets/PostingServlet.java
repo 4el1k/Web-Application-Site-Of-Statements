@@ -3,6 +3,7 @@ package ru.itis.controllers.servlets;
 import ru.itis.dto.SavePostForm;
 import ru.itis.models.Account;
 import ru.itis.services.FilesService;
+import ru.itis.services.FindAccountService;
 import ru.itis.services.SavePostService;
 
 import javax.servlet.ServletConfig;
@@ -13,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.UUID;
 
 // ToDo: jsp form, ota, service, post method
@@ -22,12 +24,14 @@ import java.util.UUID;
 public class PostingServlet extends HttpServlet {
     private FilesService filesService;
     private SavePostService savePostService;
+    private FindAccountService findAccountService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext context = config.getServletContext();
         filesService = (FilesService) context.getAttribute("filesService");
         savePostService = (SavePostService) context.getAttribute("savePostService");
+        findAccountService = (FindAccountService) context.getAttribute("findAccountService");
     }
 
     @Override
@@ -54,9 +58,10 @@ public class PostingServlet extends HttpServlet {
             return;
         }
         HttpSession session = req.getSession();
-        Account account = (Account) session.getAttribute("account");
+        Optional<Account> accountOptional =
+                findAccountService.find((UUID) (session.getAttribute("accountId")));
+        Account account = accountOptional.get();
         Part part = req.getPart("file");
-
         String fileName = account.getId().toString() + "_" + UUID.randomUUID() + ".webp" ; // part of business logic :(
         SavePostForm savePostForm = SavePostForm.builder()
                 .pathsOfPhotos(Collections.singletonList(fileName))
@@ -71,7 +76,7 @@ public class PostingServlet extends HttpServlet {
             resp.sendRedirect("/kriinge");
         } else {
             // ToDo
-            resp.sendRedirect("/SUIIII");
+            resp.sendRedirect("http://localhost:8081/Site_Of_Statements_war/feed");
         }
     }
 }

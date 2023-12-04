@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.itis.models.states.AccountRole;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +23,6 @@ public class Account {
     private String phoneNumber;
     private String password;
     private AccountRole role;
-    private List<Post> posts;
+    private List<Post> posts = new ArrayList<>();
     private List<Post> favoritePosts;
 }
